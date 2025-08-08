@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --primary:  #5a69ed;
+  --special: #0048ff;
+}
+
+/* Define dark mode overrides */
+.dark {
+  --bg: #0f172a;         /* slate-900 */
+  --text: #f1f5f9;       /* slate-100 */
+  --primary: #818cf8;    /* indigo-400 */
+  --special: #ffffff;
+}
+
+/* Hide scrollbar but allow scrolling */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+html, body {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
