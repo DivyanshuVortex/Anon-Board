@@ -1,14 +1,16 @@
+import { PrismaClient } from "@prisma/client";
 import { Response, Request } from "express";
-import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+const prisma = new PrismaClient();
+
 
 export const signup = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
 
-    
-    const exUser = await User.findOne({ email });
+    const exUser = await prisma.user.findUnique({ where: { email } });
     if (exUser) {
       return res.status(400).json({
         msg: "Email is already in use. Kindly try a different email ID.",
@@ -18,17 +20,18 @@ export const signup = async (req: Request, res: Response) => {
    
     const hashpassword = await bcrypt.hash(password, 5);
 
-   
-    const user = await User.create({
-      username,
-      email,
-      password: hashpassword,
+    const user = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: hashpassword,
+      },
     });
     
 
    
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user.id, email: user.email },
       process.env.JWT_SECRET as string,
       { expiresIn: "7d" }
     );
@@ -38,7 +41,7 @@ export const signup = async (req: Request, res: Response) => {
       msg: "Signup successful!",
       token,
       user: {
-        id: user._id,
+        id: user.id,
         username: user.username,
         email: user.email,
       },
@@ -58,7 +61,7 @@ export const signup = async (req: Request, res: Response) => {
 export const signin = async( req: Request , res: Response) => {
   const {email , password} = req.body ;
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if(!existingUser) return res.status(404).json({
       msg : " No such user found ",
     })
@@ -68,13 +71,13 @@ export const signin = async( req: Request , res: Response) => {
       msg : " Invalid Password "
     });
         const Key = process.env.JWT_SECRET as string;
-    const token = jwt.sign({ id: existingUser._id }, Key);
+    const token = jwt.sign({ id: existingUser.id }, Key);
 
     res.status(200).json({
       message: "Login successful",
       token,
       user: {
-        id: existingUser._id,
+        id: existingUser.id,
         username: existingUser.username,
         email: existingUser.email,
         createAt : existingUser.createdAt ,
@@ -88,21 +91,32 @@ export const signin = async( req: Request , res: Response) => {
 };
 
 interface AuthenticatedRequest extends Request {
-  user?: string;
+  user?: { id: number }; 
 }
 
 export const profile = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const user = await User.findById(req.user).select("-password");
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: Number(req.user.id) },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        createdAt: true,
+      },
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    console.log(user);
 
     return res.status(200).json({ message: "User profile fetched", user });
   } catch (err) {
     return res.status(500).json({ message: "Error fetching profile", error: (err as Error).message });
   }
 };
+
