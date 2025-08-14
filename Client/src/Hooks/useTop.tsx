@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-export default function UseTop() {
+export default function useTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {

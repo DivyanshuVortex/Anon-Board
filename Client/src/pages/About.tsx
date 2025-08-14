@@ -44,7 +44,7 @@ const About: React.FC = () => {
           ✍️ Create Feedback Instantly
         </motion.h2>
         <motion.p className="max-w-2xl text-lg sm:text-xl leading-relaxed" variants={fadeInVariants}>
-          Click “Create Feedback”, type your thoughts, and submit. A random anonymous ID is
+          Click “Create Feedback”, type your thoughts, and submit. An anonymous ID is
           generated for you — no sign-in, ever. It's secure, fast, and judgment-free.
         </motion.p>
       </motion.section>

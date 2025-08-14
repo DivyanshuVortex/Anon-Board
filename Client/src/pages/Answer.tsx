@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Answer = () => {
   const [questionData, setQuestionData] = useState({
@@ -10,8 +10,9 @@ const Answer = () => {
   const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [btnDisabled, setBtnDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(10);
   const { feedbackId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -44,7 +45,6 @@ const Answer = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setBtnDisabled(true);
     try {
       const resp = await fetch(
         `http://localhost:3000/api/auth/feedback/${feedbackId}`,
@@ -59,8 +59,21 @@ const Answer = () => {
       );
 
       if (!resp.ok) throw new Error("Failed to submit answer");
+
       setSubmitted(true);
       setAnswer("");
+
+      // Start countdown
+      let timer = 10;
+      setCountdown(timer);
+      const interval = setInterval(() => {
+        timer -= 1;
+        setCountdown(timer);
+        if (timer === 0) {
+          clearInterval(interval);
+          navigate("/"); // Redirect to home
+        }
+      }, 1000);
     } catch (error) {
       console.error("Error submitting answer:", error);
     }
@@ -78,9 +91,7 @@ const Answer = () => {
   return (
     <div className="min-h-screen w-screen bg-[var(--bg)] text-[var(--text)] p-6 sm:p-10">
       <div className="max-w-2xl mx-auto bg-[color:var(--bg)] border border-gray-300 rounded-2xl shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          Answer the Question
-        </h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Answer the Question</h1>
 
         {questionData.question ? (
           <>
@@ -106,35 +117,37 @@ const Answer = () => {
               {questionData.question}
             </p>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!btnDisabled && (
+            {!submitted ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <textarea
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Type your answer here..."
                   className="w-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] bg-[var(--bg)] text-[var(--text)] resize-none"
                   rows={5}
+                  required
                 />
-              )}
-
-              {!btnDisabled ? (
                 <button
                   type="submit"
                   className="px-6 py-3 bg-[#4ade80] text-white font-medium rounded-lg hover:bg-[#22c55e] transition w-full"
                 >
                   Submit Answer
                 </button>
-              ) : (
-                <div className="text-[#22c55e] text-center">
-                  Thanks for your answer!
+              </form>
+            ) : (
+              <div className="text-center space-y-3">
+                <div className="text-[#22c55e] text-lg font-semibold">
+                  ✅ Thanks for your answer!
                 </div>
-              )}
-            </form>
-
-            {submitted && (
-              <div className="mt-4 text-[#22c55e] font-medium bg-[#dcfce7] p-3 rounded-lg border border-[#bbf7d0]">
-                ✅ Your answer has been submitted successfully!
+                <p className="text-gray-400">
+                  Redirecting to home in <span className="font-bold">{countdown}</span> seconds...
+                </p>
+                <button
+                  onClick={() => navigate("/")}
+                  className="px-6 py-3 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] transition"
+                >
+                  Go to Home Now
+                </button>
               </div>
             )}
           </>

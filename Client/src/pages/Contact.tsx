@@ -7,7 +7,7 @@ import {
   FaEnvelope,
   FaPhone,
 } from "react-icons/fa6";
-import UseTop from "../Hooks/useTop";
+import useTop from "../Hooks/useTop";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 60 },
@@ -28,7 +28,7 @@ const iconVariants = {
 
 
 const Contact: React.FC = () => {
-  UseTop();
+  useTop();
   return (
     <div className="bg-[var(--bg)] text-[var(--text)] min-h-screen py-20 px-6">
       <motion.div
