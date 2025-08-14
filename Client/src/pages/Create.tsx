@@ -5,25 +5,71 @@ const Create = () => {
   const [questionType, setQuestionType] = useState("text");
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([""]);
+  const [link, setLink] = useState(false);
+  const [feedbackId, setFeedbackId] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
+
   UseTop();
-  const handleOptionChange = (index : number, value: string) => {
+
+  const handleOptionChange = (index: number, value: string) => {
     const updated = [...options];
     updated[index] = value;
     setOptions(updated);
   };
+
   const addOption = () => {
     setOptions([...options, ""]);
   };
 
-  const handleSubmit = ()=>{
-    console.log("Feedback only FE!");
-  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    // Validation
+    if (questionType === "mcq") {
+      const validOptions = options.filter((opt) => opt.trim());
+      if (validOptions.length < 2) {
+        setError("Please provide at least two options for MCQ.");
+        return;
+      }
+    }
+    setError("");
+
+    const data = {
+      content: question,
+      type: questionType,
+      options:
+        questionType === "mcq"
+          ? options.filter((opt) => opt.trim() !== "")
+          : undefined,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create feedback");
+      }
+
+      const result = await response.json();
+      setFeedbackId(result.id);
+      setLink(true);
+    } catch (err) {
+      console.error("Error:", err);
+      setError("Something went wrong. Please try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen w-screen bg-[var(--bg)] p-6 sm:p-10 text-[var(--text)]">
       <div className="max-w-3xl mx-auto">
-        
         {/* Page Title */}
         <h1 className="text-3xl font-bold mb-6 text-center">
           Create a Feedback Question
@@ -39,8 +85,8 @@ const Create = () => {
               <span className="font-medium">multiple-choice question</span>.
             </li>
             <li>
-              <strong>Step 2:</strong> If you choose text, your users will have a
-              free space to type their feedback.
+              <strong>Step 2:</strong> If you choose text, your users will have
+              a free space to type their feedback.
             </li>
             <li>
               <strong>Step 3:</strong> If you choose MCQ, think of 2–5 possible
@@ -75,9 +121,47 @@ const Create = () => {
             />
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="text-red-500 text-sm font-medium">{error}</div>
+          )}
+
+          {/* Generated Link */}
+          {link && (
+            <div className="flex items-center justify-center mt-6">
+              <div className="flex items-center bg-[var(--card-bg)] border border-gray-300 rounded-lg shadow px-4 py-2">
+                <input
+                  type="text"
+                  value={`/feedback/${feedbackId}`}
+                  readOnly
+                  className="bg-[var(--input-bg)] text-[var(--text)] outline-none w-64 px-2 py-1 rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `/feedback/${feedbackId}`
+                    );
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 5000);
+                  }}
+                  className={`ml-3 px-3 py-1 rounded transition ${
+                    copied
+                      ? "bg-green-500"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  } text-white`}
+                >
+                  {copied ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Question Type Selector */}
           <div>
-            <label className="block font-medium mb-2 text-lg">Question Type</label>
+            <label className="block font-medium mb-2 text-lg">
+              Question Type
+            </label>
             <div className="flex gap-8">
               <label className="flex items-center gap-2">
                 <input
@@ -112,7 +196,6 @@ const Create = () => {
                   onChange={(e) => handleOptionChange(index, e.target.value)}
                   placeholder={`Option ${index + 1}`}
                   className="w-full p-3 rounded-lg border border-gray-300 bg-[var(--input-bg)] mb-2"
-                  required
                 />
               ))}
               <button

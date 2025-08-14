@@ -10,7 +10,8 @@ const Home: React.FC = () => {
 
 
   function handleAnswer() {
-    navigate(`/feedback/answer/${feedback}`);
+    console.log(feedback[5])
+    navigate(`${feedback}`);
   }
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex flex-col gap-24 py-16 px-6 lg:px-24 hide-scrollbar">
@@ -88,7 +89,7 @@ const Home: React.FC = () => {
               className="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-transparent text-sm w-full sm:w-60"
             />
             <button className="px-6 py-2 rounded border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition"
-            onClick={handleAnswer}
+              onClick={handleAnswer}
             >
               Join Feedback
             </button>
