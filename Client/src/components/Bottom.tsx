@@ -2,55 +2,43 @@ import React from "react";
 
 const Bottom: React.FC = () => {
   return (
-    <footer className="w-full bg-[var(--bg)] text-[var(--text)] border-t shadow-inner px-6 py-10">
-      <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-3 text-center sm:text-left">
-        {/* Logo */}
-        <div className="flex flex-col items-center sm:items-start gap-2">
-          <img
-            src="/logo.png"
-            alt="AnonBoard Logo"
-            className="h-12 w-12 object-contain"
-          />
-          <span className="text-lg font-semibold tracking-wide">
-            AnonBoard
-          </span>
+    <footer className="w-full bg-[var(--bg)] text-[var(--text)] border-t shadow-inner px-4 py-4">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm">
+        
+        {/* Logo + Name */}
+        <div className="flex items-center gap-2">
+          <span className="font-semibold tracking-wider">AnonBoard</span>
         </div>
 
-        {/* Feature Links */}
-        <div className="flex flex-col items-center gap-2 sm:items-start text-sm">
-          <h4 className="font-medium text-[var(--primary)]">Features</h4>
-          <a
-            href="/feedback"
-            className="hover:underline hover:text-[var(--primary)] transition"
-          >
-            📝 Anon Feedback
-          </a>
-        </div>
-
-        {/* External Links and Info */}
-        <div className="flex flex-col items-center gap-2 sm:items-start text-sm">
-          <h4 className="font-medium text-[var(--primary)]">More</h4>
+        {/* Links */}
+        <div className="hidden sm:flex items-center gap-4">
           <a
             href="https://github.com/DivyanshuVortex"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:underline hover:text-[var(--primary)] transition"
+            className="hover:text-[var(--primary)] transition"
           >
             GitHub
           </a>
           <a
             href="/contact"
-            className="hover:underline hover:text-[var(--primary)] transition"
+            className="hover:text-[var(--primary)] transition"
           >
             Contact
           </a>
-          <p className="mt-2 text-xs text-gray-500">
+          <span className="text-gray-500">
             👁️ Visitors: <span id="visit-count">--</span>
-          </p>
+          </span>
         </div>
       </div>
 
-      <div className="mt-10 border-t pt-4 text-center text-xs text-gray-500">
+      {/* Mobile Single Line */}
+      <div className="sm:hidden mt-3 text-center text-[11px] text-gray-500">
+        © 2025 <strong>AnonBoard</strong> — GitHub | Contact
+      </div>
+
+      {/* Bottom line desktop */}
+      <div className="hidden sm:block mt-3 text-center text-[11px] text-gray-500">
         © 2025 <strong>AnonBoard</strong> — All rights reserved.
       </div>
     </footer>
