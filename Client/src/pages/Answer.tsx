@@ -108,14 +108,15 @@ const Answer = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <textarea
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Type your answer here..."
-                className="w-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] bg-[var(--bg)] text-[var(--text)] resize-none"
-                rows={5}
-                required
-              />
+              {!btnDisabled && (
+                <textarea
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder="Type your answer here..."
+                  className="w-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] bg-[var(--bg)] text-[var(--text)] resize-none"
+                  rows={5}
+                />
+              )}
 
               {!btnDisabled ? (
                 <button

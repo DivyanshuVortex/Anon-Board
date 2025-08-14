@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import React from "react";
 
-
 const Profile: React.FC = () => {
   const { user, isLoggedIn, setUser, setIsLoggedIn } =
     useContext(UserAuthContext);
@@ -30,11 +29,10 @@ const Profile: React.FC = () => {
           },
         });
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch user profile");
-        }
+        if (!res.ok) throw new Error("Failed to fetch user profile");
 
         const userData = await res.json();
+        console.log("Fetched user data:", userData); // Debug API response
         setUser(userData.user);
         setIsLoggedIn(true);
       } catch (error) {
@@ -74,18 +72,8 @@ const Profile: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen dark:bg-[var(--bg)] px-4">
-      {/* MAIN CARD: use `group` so children can react to hover (group-hover) */}
-      <div
-        className="relative group w-full max-w-lg p-8 mb-5 bg-white dark:bg-[var(--bg)] rounded-xl shadow-lg border border-gray-200 dark:border-gray-700
-                   transition-all duration-300"
-      >
-        {/* bottom bar for main card (transparent by default, becomes black in light mode, white+glow in dark mode) */}
-        <span
-          className="absolute left-0 right-0 -bottom-px h-1 bg-transparent rounded-b-xl
-                     transition-colors duration-300 pointer-events-none
-                     group-hover:bg-black dark:group-hover:bg-white
- group-hover:shadow-[0_0_12px_rgba(255,255,255,--text)]"
-        />
+      <div className="relative group w-full max-w-4xl p-8 mb-5 bg-white dark:bg-[var(--bg)] rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300">
+        <span className="absolute left-0 right-0 -bottom-px h-1 bg-transparent rounded-b-xl transition-colors duration-300 pointer-events-none group-hover:bg-black dark:group-hover:bg-white group-hover:shadow-[0_0_12px_rgba(255,255,255,--text)]" />
 
         {isLoggedIn && user ? (
           <>
@@ -105,44 +93,57 @@ const Profile: React.FC = () => {
             </div>
 
             {/* Feedback Section */}
-            <div className="mb-8">
+            <div className="mb-8 w-full">
               <h2 className="text-lg font-semibold text-[var(--special)] mb-3">
                 Recent Feedback
               </h2>
 
               {user.feedback && user.feedback.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {user.feedback
-                    .slice(-6)
-                    .reverse()
-                    .map((fb: any) => (
-                      // Each feedback card is also a group with a bottom overlay bar
-                      <div
-                        key={fb.id}
-                        onClick={() => navigate(`/analysis/${fb.id}`)}
-                        className="relative group bg-[var(--primary)]/10 dark:bg-[var(--primary)]/20 rounded-lg px-4 pt-3 pb-5 text-sm shadow-sm
-                                   border border-[var(--primary)]/20 transition-all duration-300 hover:bg-[var(--primary)]/20 dark:hover:bg-[var(--primary)]/50 hover:scale-105 border-t-4 hover:border-t-white"
-                      >
-                        <p className="text-[var(--text)] line-clamp-2">{fb.content}</p>
-                        <span className="block mt-2 text-xs text-gray-500">
-                          {new Date(fb.createdAt).toLocaleString(undefined, {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
+                <div className="w-full border border-gray-300 rounded-lg overflow-hidden">
+                  {/* Grid header */}
+                  <div className="grid grid-cols-4 bg-[var(--primary)] text-white font-semibold">
+                    <div className="px-4 py-2 border-r">S.No</div>
+                    <div className="px-4 py-2 border-r">Title</div>
+                    <div className="px-4 py-2 border-r">Responses</div>
+                    <div className="px-4 py-2">Dashboard</div>
+                  </div>
 
-                        {/* bottom bar overlay for feedback card */}
-                        <span
-                          className="absolute left-2 right-2 -bottom-px h-1 bg-transparent rounded-b-md
-                                     transition-colors duration-300 pointer-events-none
-                                     group-hover:bg-[var(--text)]
-                                     group-hover:shadow-[0_0_10px_var(--text)]"
-                        />
+                  {/* Grid rows */}
+                  {user.feedback.map((feedback: any, index: number) => {
+                    console.log("Feedback object:", feedback); // Debug each feedback
+
+                    return (
+                      <div
+                        key={feedback.id || index}
+                        className="grid grid-cols-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-[var(--text)]"
+                      >
+                        <div className="px-4 py-2 border-r text-center">
+                          {index + 1}
+                        </div>
+                        <div className="px-4 py-2 border-r">
+                          {feedback.title || feedback.content}
+                        </div>
+                        <div className="px-4 py-2 border-r text-center">
+                          {feedback._count?.responses ?? 0}
+                        </div>
+                        <div className="px-4 py-2 text-center">
+                          <button
+                            onClick={() =>
+                              navigate(`/dashboard/${feedback.id}`, {
+                                state: {
+                                  responseCount:
+                                    feedback._count?.responses ?? 0,
+                                },
+                              })
+                            }
+                            className="text-blue-500 hover:underline"
+                          >
+                            Go to
+                          </button>
+                        </div>
                       </div>
-                    ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="text-gray-500 text-sm">No feedback yet</p>

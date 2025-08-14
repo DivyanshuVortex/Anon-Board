@@ -78,7 +78,7 @@ export const answerFeedback = async (req: Request, res: Response) => {
 
     const response = await prisma.response.create({
       data: {
-        content: req.body.content,
+        content: req.body.answer,
         feedbackId: feedbackId,
       },
     });

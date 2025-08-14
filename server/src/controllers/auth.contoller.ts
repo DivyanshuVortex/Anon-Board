@@ -108,7 +108,16 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
         username: true,
         email: true,
         createdAt: true,
-        feedback: true,
+        feedback: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            _count: { 
+              select: { responses: true },
+            },
+          },
+        },
       },
     });
 
@@ -118,7 +127,11 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
 
     return res.status(200).json({ message: "User profile fetched", user });
   } catch (err) {
-    return res.status(500).json({ message: "Error fetching profile", error: (err as Error).message });
+    return res.status(500).json({
+      message: "Error fetching profile",
+      error: (err as Error).message,
+    });
   }
 };
+
 
