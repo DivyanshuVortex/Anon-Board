@@ -11,6 +11,8 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import UsercontentProvider from "./contexts/UsercontentProvider";
 import Create from "./pages/Create";
+import Answer from "./pages/Answer";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -26,6 +28,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/feedback/create" element={<Create />} />
+
+          <Route path="/feedback/:feedbackId" element={<Answer />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           {/* Add more routes as needed */}
         </Routes>
         <Bottom />
