@@ -96,7 +96,6 @@ interface AuthenticatedRequest extends Request {
 
 export const profile = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    console.log("User ID from request:", req.user?.id);
     if (!req.user?.id) {
       return res.status(401).json({ message: "Unauthorized" });
     }
