@@ -6,7 +6,7 @@ export interface User {
   username: string;
   email: string;
   clipboards: number;
-  feedbacks: number;
+  feedbacks: object[];
 }
 
 // Define the context type

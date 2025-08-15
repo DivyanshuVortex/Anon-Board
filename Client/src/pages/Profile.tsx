@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
 
   const FeedbackList = () => (
     <>
-      {user?.feedback && user.feedback.length > 0 ? (
+      {user?.feedbacks && user.feedbacks.length > 0 ? (
         <div className="w-full">
           {/* Desktop/Tablet table */}
           <div className="hidden md:grid grid-cols-4 border rounded-lg overflow-hidden">
@@ -63,7 +63,7 @@ const Profile: React.FC = () => {
             <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">Title</div>
             <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">Responses</div>
             <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2">Dashboard</div>
-            {user.feedback.map((f: any, i: number) => (
+            {user.feedbacks.map((f: any, i: number) => (
               <React.Fragment key={f.id || i}>
                 <div className="px-4 py-2 border-t">{i + 1}</div>
                 <div className="px-4 py-2 border-t truncate">{f.title || f.content}</div>
@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
 
           {/* Mobile cards */}
           <div className="block md:hidden space-y-3">
-            {user.feedback.map((f: any, i: number) => (
+            {user.feedbacks.map((f: any, i: number) => (
               <div
                 key={f.id || i}
                 className="p-3 border rounded-lg bg-white dark:bg-gray-800 shadow-sm"
