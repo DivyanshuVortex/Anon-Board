@@ -1,28 +1,31 @@
 import React from "react";
+import type { Variants, Transition } from "framer-motion";
 import { motion } from "framer-motion";
-import {
-  FaLinkedin,
-  FaGithub,
-  FaXTwitter,
-  FaEnvelope,
-  FaPhone,
-} from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaXTwitter, FaEnvelope, FaPhone } from "react-icons/fa6";
 import useTop from "../Hooks/useTop";
 
-const sectionVariants = {
+// Fixed section variants
+const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 60 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: {
+      duration: 0.6,
+      ease: [0.42, 0, 0.58, 1], // cubic-bezier array is allowed
+    } as Transition,
   },
 };
 
-const iconVariants = {
+// Fixed icon hover variants
+const iconVariants: Variants = {
   hover: {
     scale: 1.2,
     boxShadow: "0px 0px 20px var(--primary)",
-    transition: { type: "spring", stiffness: 300 },
+    transition: {
+      type: "spring",
+      stiffness: 300,
+    } as Transition,
   },
 };
 
@@ -43,11 +46,9 @@ const Contact: React.FC = () => {
         </h1>
 
         <p className="text-center text-lg sm:text-xl text-gray-400 mb-10">
-          I'm always happy to connect! You can reach out via phone, email, or
-          follow me on social media.
+          I'm always happy to connect! You can reach out via phone, email, or follow me on social media.
         </p>
 
-        {/* Contact Info */}
         <div className="flex flex-col sm:flex-row justify-around items-center sm:items-start space-y-8 sm:space-y-0 sm:space-x-10 text-center">
           <div className="flex flex-col items-center space-y-2">
             <FaPhone className="text-4xl text-[var(--primary)]" />
@@ -99,8 +100,7 @@ const Contact: React.FC = () => {
         </div>
 
         <p className="mt-12 text-center text-gray-500">
-          Whether it’s a project collaboration, a quick chat, or just to say hi,
-          feel free to reach out!
+          Whether it’s a project collaboration, a quick chat, or just to say hi, feel free to reach out!
         </p>
       </motion.div>
     </div>
