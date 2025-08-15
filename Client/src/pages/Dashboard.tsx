@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
     if (showLoader) setLoading(true);
     try {
       const resp = await fetch(
-        `http://localhost:3000/api/auth/feedback/${feedbackId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}`,
         {
           method: "GET",
           headers: {
@@ -73,8 +73,8 @@ const Dashboard: React.FC = () => {
     if (!window.confirm("❗ Delete this response?")) return;
     try {
       const resp = await fetch(
-        `http://localhost:3000/api/auth/feedback/${feedbackId}/response/${responseId}`,
-        {
+          `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}/response/${responseId}`,
+          {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const Dashboard: React.FC = () => {
       return;
     try {
       const resp = await fetch(
-        `http://localhost:3000/api/auth/feedback/${feedbackId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}`,
         {
           method: "DELETE",
           headers: {

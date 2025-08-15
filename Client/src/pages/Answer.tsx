@@ -18,7 +18,7 @@ const Answer = () => {
     const fetchQuestion = async () => {
       try {
         const resp = await fetch(
-          `http://localhost:3000/api/auth/feedback/${feedbackId}`,
+          `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,7 +47,7 @@ const Answer = () => {
     e.preventDefault();
     try {
       const resp = await fetch(
-        `http://localhost:3000/api/auth/feedback/${feedbackId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}`,
         {
           method: "POST",
           headers: {

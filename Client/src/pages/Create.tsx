@@ -31,7 +31,7 @@ const Create = () => {
     const data = { content: question, type: "text" };
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/create", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
