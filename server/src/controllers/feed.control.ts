@@ -11,7 +11,6 @@ export interface AuthenticatedRequest extends Request {
 
 export const createFeedback = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    console.log(req.user?.id);
     const userId = req.user?.id;
 
     if (!userId) {
@@ -62,12 +61,11 @@ export const answerFeedback = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
     const feedbackId = parseInt(req.params.id as string);
-    console.log("Feedback ID:", feedbackId);
        const existingFeedback = await prisma.feedback.findUnique({
       where: { id: feedbackId },
       include: {
         user: {
-          select: { username: true,createdAt: true }, 
+          select: { username: true, createdAt: true },
         }
       }
     });

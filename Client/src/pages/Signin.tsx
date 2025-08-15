@@ -38,9 +38,7 @@ const Signin: React.FC = () => {
 
       setUser(data.user);
       setIsLoggedIn(true);
-
-      console.log("Login successful:", data);
-      navigate("/");
+      navigate("/profile");
     } catch (error) {
       console.error("Error during signin:", error);
       alert("Something went wrong. Please try again.");
