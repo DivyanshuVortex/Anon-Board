@@ -26,77 +26,46 @@ const iconVariants = {
   },
 };
 
-
 const Contact: React.FC = () => {
   useTop();
+
   return (
-    <div className="bg-[var(--bg)] text-[var(--text)] min-h-screen py-20 px-6">
+    <div className="bg-[var(--bg)] text-[var(--text)] min-h-screen flex items-center justify-center px-6">
       <motion.div
-        className="max-w-4xl mx-auto"
+        className="max-w-4xl w-full"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={sectionVariants}
       >
-        <h1 className="text-4xl sm:text-5xl font-bold text-center mb-10 text-[var(--primary)]">
-          📬 Contact Us
+        <h1 className="text-4xl sm:text-5xl font-bold text-center mb-6 text-[var(--primary)]">
+          📬 Contact Me
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Contact Form */}
-          <form className="flex flex-col space-y-4">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="p-3 rounded-lg bg-transparent border border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--special)]"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="p-3 rounded-lg bg-transparent border border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--special)]"
-            />
-            <textarea
-              placeholder="Your Message"
-              rows={5}
-              className="p-3 rounded-lg bg-transparent border border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--special)]"
-            />
-            <button
-              type="submit"
-              className="py-3 px-6 rounded-lg font-semibold bg-[var(--primary)] text-white transition duration-200 hover:shadow-[0_0_15px_var(--primary)] hover:bg-[var(--special)] hover:text-black"
-            >
-              Send Message
-            </button>
-          </form>
+        <p className="text-center text-lg sm:text-xl text-gray-400 mb-10">
+          I'm always happy to connect! You can reach out via phone, email, or
+          follow me on social media.
+        </p>
 
-          {/* Contact Info with Icons */}
-          <div className="flex flex-col justify-center space-y-6">
-            <div className="flex items-center space-x-3">
-              <FaPhone className="text-xl text-[var(--primary)]" />
-              <a
-                href="tel:+919027832361"
-                className="text-lg hover:underline text-[var(--primary)]"
-              >
-                +91 90278 32361
-              </a>
-            </div>
+        {/* Contact Info */}
+        <div className="flex flex-col sm:flex-row justify-around items-center sm:items-start space-y-8 sm:space-y-0 sm:space-x-10 text-center">
+          <div className="flex flex-col items-center space-y-2">
+            <FaPhone className="text-4xl text-[var(--primary)]" />
+            <span className="text-lg">+91 90278 32361</span>
+          </div>
 
-            <div className="flex items-center space-x-3">
-              <FaEnvelope className="text-xl text-[var(--primary)]" />
-              <a
-                href="mailto:divyanshuchandra9027@gmail.com"
-                className="text-lg hover:underline text-[var(--primary)]"
-              >
-                divyanshuchandra9027@gmail.com
-              </a>
-            </div>
+          <div className="flex flex-col items-center space-y-2">
+            <FaEnvelope className="text-4xl text-[var(--primary)]" />
+            <span className="text-lg">divyanshuchandra9027@gmail.com</span>
+          </div>
 
-            {/* Social Icons */}
-            <div className="flex items-center space-x-6 mt-4">
+          <div className="flex flex-col items-center space-y-3">
+            <div className="flex items-center space-x-6">
               <motion.a
                 href="https://linkedin.com/in/divyanshu-chandra-66074926b"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-2xl text-[var(--primary)]"
+                className="text-4xl text-[var(--primary)]"
                 whileHover="hover"
                 variants={iconVariants}
               >
@@ -107,7 +76,7 @@ const Contact: React.FC = () => {
                 href="https://github.com/DivyanshuVortex"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-2xl text-[var(--primary)]"
+                className="text-4xl text-[var(--primary)]"
                 whileHover="hover"
                 variants={iconVariants}
               >
@@ -118,15 +87,21 @@ const Contact: React.FC = () => {
                 href="https://x.com/DivyanshuVortex"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-2xl text-[var(--primary)]"
+                className="text-4xl text-[var(--primary)]"
                 whileHover="hover"
                 variants={iconVariants}
               >
                 <FaXTwitter />
               </motion.a>
             </div>
+            <span className="text-lg font-semibold mb-2">Follow Me</span>
           </div>
         </div>
+
+        <p className="mt-12 text-center text-gray-500">
+          Whether it’s a project collaboration, a quick chat, or just to say hi,
+          feel free to reach out!
+        </p>
       </motion.div>
     </div>
   );
