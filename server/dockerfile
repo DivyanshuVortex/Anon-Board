@@ -1,0 +1,21 @@
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install -g ts-node-dev
+RUN npm install
+
+# Copy the rest of the project (including prisma folder)
+COPY . .
+
+# Generate Prisma client (for Linux)
+RUN npx prisma generate
+
+# Expose app port
+EXPOSE 3000
+
+# Run dev server
+CMD ["npm", "run", "dev"]

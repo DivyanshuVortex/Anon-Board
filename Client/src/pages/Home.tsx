@@ -78,8 +78,8 @@ const Home: React.FC = () => {
         id="feedback"
         initial={{ opacity: 0, x: -100 }}
         whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.7, type: "spring" }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.7, type: "tween", ease: "easeOut" }}
         className="flex flex-col-reverse lg:flex-row items-center gap-12"
       >
         {/* Image */}
