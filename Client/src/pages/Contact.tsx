@@ -9,22 +9,28 @@ import {
 } from "react-icons/fa6";
 import useTop from "../Hooks/useTop";
 
-const sectionVariants = {
+import type { Variants } from "framer-motion";
+
+export const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 60 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: {
+      duration: 0.6,
+      ease: [0.42, 0, 0.58, 1], // cubic-bezier for easeOut
+    },
   },
 };
 
-const iconVariants = {
+export const iconVariants: Variants = {
   hover: {
     scale: 1.2,
     boxShadow: "0px 0px 20px var(--primary)",
     transition: { type: "spring", stiffness: 300 },
   },
 };
+
 
 const Contact: React.FC = () => {
   useTop();
