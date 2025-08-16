@@ -65,7 +65,7 @@ const Home: React.FC = () => {
       >
         <Link
               to={isLoggedIn ? "feedback/create" : "signin"}
-              className="px-6 hover:scale-110 py-2 rounded bg-[var(--primary)] text-white hover:opacity-80 transition text-center"
+              className="px-6 hover:scale-200 scale-150 py-2 rounded bg-[var(--primary)] text-white hover:opacity-80 transition text-center"
             >
               Create Question
             </Link>

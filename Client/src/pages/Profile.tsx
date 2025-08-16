@@ -15,7 +15,7 @@ const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
   const feedbackUrl = `${window.location.origin}/feedback/${feedbackId}`;
   const sharing = () => {
     setShare(true);
-    setTimeout(() => setShare(false), 100000);
+    setTimeout(() => setShare(false), 10000);
     return;
   };
 
