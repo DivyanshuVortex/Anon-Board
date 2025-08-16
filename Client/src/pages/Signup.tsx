@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserAuthContext } from "../contexts/Usercontext";
+import UseTop from "../Hooks/useTop";
+import { toast } from "react-toastify";
 
 const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -7,6 +10,9 @@ const Signup: React.FC = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+
+    const { setUser, setIsLoggedIn } = useContext(UserAuthContext);
+  UseTop();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -23,15 +29,17 @@ const Signup: React.FC = () => {
 
       if (!response.ok) {
         console.error("Signup failed:", data.msg || "Unknown error");
-        alert(data.msg || "Signup failed");
+        toast.error(data.msg || "Signup failed");
         return;
       }
+            localStorage.setItem("token", data.token);
 
-      alert("Signup successful! Please sign in.");
-      navigate("/signin"); // ✅ client-side redirect
+      setUser(data.user);
+      setIsLoggedIn(true);
+      navigate("/");
     } catch (error) {
       console.error("Error during signup:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

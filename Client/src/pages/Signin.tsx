@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import {  useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import UseTop from "../Hooks/useTop";
+import { toast } from "react-toastify";
 
 const Signin: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -28,9 +29,8 @@ const Signin: React.FC = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        // Show error from backend
         console.error("Login failed:", data.msg || "Unknown error");
-        alert(data.msg || "Login failed");
+        toast.error(data.msg || "Login failed");
         return;
       }
 
@@ -43,7 +43,7 @@ const Signin: React.FC = () => {
       navigate("/");
     } catch (error) {
       console.error("Error during signin:", error);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

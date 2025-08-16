@@ -1,10 +1,175 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
-import React from "react";
+import {
+  FaFacebook,
+  FaTwitter,
+  FaLinkedin,
+  FaWhatsapp,
+  FaLink,
+} from "react-icons/fa";
+
+const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
+  const [copied, setCopied] = useState(false);
+  const [share, setShare] = useState(false);
+  const feedbackUrl = `${window.location.origin}/feedback/${feedbackId}`;
+  const sharing = () => {
+    setShare(true);
+    setTimeout(() => setShare(false), 100000);
+    return;
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(feedbackUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  };
+
+  const openShare = (platform: string) => {
+    let url = "";
+    switch (platform) {
+      case "facebook":
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(feedbackUrl)}`;
+        break;
+      case "twitter":
+        url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(feedbackUrl)}`;
+        break;
+      case "linkedin":
+        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(feedbackUrl)}`;
+        break;
+      case "whatsapp":
+        url = `https://api.whatsapp.com/send?text=${encodeURIComponent(feedbackUrl)}`;
+        break;
+    }
+    if (url) window.open(url, "_blank");
+  };
+
+  return (
+    <div className="text-center">
+      {!share && (
+        <button className="text-sm text-gray-400 mb-1.5" onClick={sharing}>
+          Share
+        </button>
+      )}
+      {share && (
+        <div className="flex justify-center gap-3 text-2xl mb-1.5">
+          <button
+            onClick={() => openShare("facebook")}
+            className="hover:text-blue-500 transition"
+          >
+            <FaFacebook />
+          </button>
+          <button
+            onClick={() => openShare("twitter")}
+            className="hover:text-sky-400 transition"
+          >
+            <FaTwitter />
+          </button>
+          <button
+            onClick={() => openShare("linkedin")}
+            className="hover:text-blue-700 transition"
+          >
+            <FaLinkedin />
+          </button>
+          <button
+            onClick={() => openShare("whatsapp")}
+            className="hover:text-green-500 transition"
+          >
+            <FaWhatsapp />
+          </button>
+          <button onClick={copyLink} className="hover:text-gray-400 transition">
+            <FaLink />
+          </button>
+        </div>
+      )}
+      {copied && <p className="text-xs text-green-500 mt-1">Link copied!</p>}
+    </div>
+  );
+};
+
+const FeedbackList: React.FC<{ user: any; navigate: any }> = ({
+  user,
+  navigate,
+}) => {
+  if (!Array.isArray(user?.feedback) || user.feedback.length === 0) {
+    return <p className="text-gray-500 mt-4">No feedback yet</p>;
+  }
+
+  return (
+    <>
+      {/* Desktop Table */}
+      <div className="hidden md:grid grid-cols-5 border rounded-lg overflow-hidden mt-4">
+        {["S.No", "Title", "Responses", "Link", "Dashboard"].map((heading) => (
+          <div
+            key={heading}
+            className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r text-center"
+          >
+            {heading}
+          </div>
+        ))}
+
+        {user.feedback.map((f: any, i: number) => (
+          <React.Fragment key={f.id || i}>
+            <div className="px-4 py-2 border-t text-center">{i + 1}</div>
+            <div className="px-4 py-2 border-t truncate text-center">
+              {f.title || f.content}
+            </div>
+            <div className="px-4 py-2 border-t text-center">
+              {f._count?.responses ?? 0}
+            </div>
+            <div className="px-4 py-2 border-t text-center">
+              <ShareButtons feedbackId={f.id} />
+            </div>
+            <div className="px-4 py-2 border-t text-center">
+              <button
+                onClick={() =>
+                  navigate(`/dashboard/${f.id}`, {
+                    state: { responseCount: f._count?.responses ?? 0 },
+                  })
+                }
+                className="text-blue-500 hover:underline"
+              >
+                Go to
+              </button>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="block md:hidden space-y-3 mt-4">
+        {user.feedback.map((f: any, i: number) => (
+          <div
+            key={f.id || i}
+            className="p-3 border rounded-lg bg-white dark:bg-gray-800 shadow-sm"
+          >
+            <p className="font-semibold">{f.title || f.content}</p>
+            <p className="text-sm text-gray-500">
+              Responses: {f._count?.responses ?? 0}
+            </p>
+            <div className="flex justify-between mt-2 items-center">
+              <button
+                onClick={() =>
+                  navigate(`/dashboard/${f.id}`, {
+                    state: { responseCount: f._count?.responses ?? 0 },
+                  })
+                }
+                className="text-blue-500 hover:underline"
+              >
+                View Dashboard
+              </button>
+              <ShareButtons feedbackId={f.id} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
 const Profile: React.FC = () => {
-  const { user, isLoggedIn, setUser, setIsLoggedIn } = useContext(UserAuthContext);
+  const { user, isLoggedIn, setUser, setIsLoggedIn } =
+    useContext(UserAuthContext);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -19,14 +184,16 @@ const Profile: React.FC = () => {
 
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/profile`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/profile`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!res.ok) throw new Error("Failed to fetch user profile");
-
         const data = await res.json();
         setUser(data.user);
         setIsLoggedIn(true);
@@ -51,78 +218,6 @@ const Profile: React.FC = () => {
   const avatarUrl = user
     ? `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.username)}`
     : "";
-
-  const FeedbackList = () => (
-    <>
-      {Array.isArray(user?.feedback) && user.feedback.length > 0 ? (
-        <div className="w-full">
-          <div className="hidden md:grid grid-cols-4 border rounded-lg overflow-hidden">
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">
-              S.No
-            </div>
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">
-              Title
-            </div>
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">
-              Responses
-            </div>
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2">
-              Dashboard
-            </div>
-            {user.feedback.map((f: any, i: number) => (
-              <React.Fragment key={f.id || i}>
-                <div className="px-4 py-2 border-t">{i + 1}</div>
-                <div className="px-4 py-2 border-t truncate">
-                  {f.title || f.content}
-                </div>
-                <div className="px-4 py-2 border-t text-center">
-                  {f._count?.responses ?? 0}
-                </div>
-                <div className="px-4 py-2 border-t text-center">
-                  <button
-                    onClick={() =>
-                      navigate(`/dashboard/${f.id}`, {
-                        state: { responseCount: f._count?.responses ?? 0 },
-                      })
-                    }
-                    className="text-blue-500 hover:underline"
-                  >
-                    Go to
-                  </button>
-                </div>
-              </React.Fragment>
-            ))}
-          </div>
-
-          <div className="block md:hidden space-y-3">
-            {user.feedback.map((f: any, i: number) => (
-              <div
-                key={f.id || i}
-                className="p-3 border rounded-lg bg-white dark:bg-gray-800 shadow-sm"
-              >
-                <p className="font-semibold">{f.title || f.content}</p>
-                <p className="text-sm text-gray-500">
-                  Responses: {f._count?.responses ?? 0}
-                </p>
-                <button
-                  onClick={() =>
-                    navigate(`/dashboard/${f.id}`, {
-                      state: { responseCount: f._count?.responses ?? 0 },
-                    })
-                  }
-                  className="mt-2 text-blue-500 hover:underline"
-                >
-                  View Dashboard
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <p className="text-gray-500">No feedback yet</p>
-      )}
-    </>
-  );
 
   if (loading) {
     return (
@@ -151,28 +246,30 @@ const Profile: React.FC = () => {
               <p className="text-gray-500 dark:text-gray-300">{user.email}</p>
             </div>
 
-            <FeedbackList />
+            <FeedbackList user={user} navigate={navigate} />
 
             <button
               onClick={handleLogout}
-              className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--primary)] text-white hover:bg-[var(--special)] hover:text-black"
+              className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--primary)] text-white hover:bg-[var(--special)] hover:text-black transition"
             >
               Logout
             </button>
           </>
         ) : (
           <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-6">You're not logged in</h2>
+            <h2 className="text-2xl font-semibold mb-6">
+              You're not logged in
+            </h2>
             <div className="flex flex-col md:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate("/signin")}
-                className="px-6 py-2 rounded-lg font-semibold bg-[var(--primary)] text-white hover:bg-[var(--special)] hover:text-black"
+                className="px-6 py-2 rounded-lg font-semibold bg-[var(--primary)] text-white hover:bg-[var(--special)] hover:text-black transition"
               >
                 Sign In
               </button>
               <button
                 onClick={() => navigate("/signup")}
-                className="px-6 py-2 rounded-lg font-semibold border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--special)] hover:text-black"
+                className="px-6 py-2 rounded-lg font-semibold border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--special)] hover:text-black transition"
               >
                 Sign Up
               </button>
