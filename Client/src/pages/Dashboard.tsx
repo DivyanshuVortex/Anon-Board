@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import { Trash2 } from "lucide-react";
 import useTop from "../Hooks/useTop";
+import { toast } from 'react-toastify';
 
 interface ResponseItem {
   id: number;
@@ -115,10 +116,10 @@ const Dashboard: React.FC = () => {
       );
 
       if (resp.ok) {
-        alert("✅ Feedback deleted successfully!");
+        toast.success("Question deleted successfully!");
         navigate("/");
       } else {
-        alert("❌ Failed to delete feedback.");
+        toast.error("❌ Failed to delete feedback.");
       }
     } catch (err) {
       console.error("Error deleting feedback:", err);

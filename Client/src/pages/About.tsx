@@ -41,10 +41,10 @@ const About: React.FC = () => {
         viewport={{ once: true, amount: 0.5 }}
       >
         <motion.h2 className="text-4xl sm:text-5xl font-bold text-[var(--primary)] mb-4" variants={fadeInVariants}>
-          ✍️ Create Feedback Instantly
+          ✍️ Create Question Instantly
         </motion.h2>
         <motion.p className="max-w-2xl text-lg sm:text-xl leading-relaxed" variants={fadeInVariants}>
-          Click “Create Feedback”, type your thoughts, and submit. An anonymous ID is
+          Click “Create Question”, type your thoughts, and submit. An anonymous ID is
           generated for you — ever. It's secure, fast, and judgment-free.
         </motion.p>
       </motion.section>
@@ -61,7 +61,7 @@ const About: React.FC = () => {
           🔄 How It Works
         </motion.h2>
         <motion.p className="max-w-2xl text-lg sm:text-xl leading-relaxed" variants={fadeInVariants}>
-          Feedback gets stored anonymously and can be accessed by the receiver via a unique
+          Questions get stored anonymously and can be accessed by the receiver via a unique
           URL. Perfect for team retros, student reviews, or community feedback—no exposure,
           just insights.
         </motion.p>

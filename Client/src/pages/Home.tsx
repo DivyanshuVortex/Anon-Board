@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import homeImg from "../assets/Hero.jpg";
+import { toast } from "react-toastify";
 // Simple Spinner Component
 const Spinner: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center bg-[var(--bg)] z-50">
@@ -12,24 +13,24 @@ const Spinner: React.FC = () => (
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [feedback, setFeedback] = useState("");
+  const [Question, setQuestion] = useState("");
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { isLoggedIn } = useContext(UserAuthContext);
 
   function handleAnswer() {
-  if (!feedback || feedback.trim() === "") {
-    alert("Please enter a Feedback URL");
+  if (!Question || Question.trim() === "") {
+    toast.error("Please enter a Question URL");
     return;
   }
 
   try {
-    const url = new URL(feedback); // parse the string as a URL
+    const url = new URL(Question); // parse the string as a URL
     const parts = url.pathname.split("/"); 
     const codeId = parts[2];
     navigate(`feedback/${codeId}`);
   } catch (e) {
-    alert("Invalid URL");
+    toast.error("Invalid URL");
   }
 }
 
@@ -60,10 +61,16 @@ const Home: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.6, type: "spring", delay: 0.2 }}
-        className="flex justify-center gap-10 text-lg font-medium"
+        className="flex flex-col justify-center items-center gap-5 text-sm font-medium"
       >
+        <Link
+              to={isLoggedIn ? "feedback/create" : "signin"}
+              className="px-6 hover:scale-110 py-2 rounded bg-[var(--primary)] text-white hover:opacity-80 transition text-center"
+            >
+              Create Question
+            </Link>
         <a
-          href="#feedback"
+          href="#Question"
           className="hover:underline hover:text-[var(--primary)] transition"
         >
           Try Now
@@ -79,15 +86,15 @@ const Home: React.FC = () => {
         className="text-2xl text-center leading-relaxed max-w-4xl mx-auto"
       >
         AnonBoard is your private playground for creating and sharing messages
-        or questions anonymously. Whether you're gathering honest feedback, —
+        or questions anonymously. Whether you're gathering honest feedback's —
         it's fast, anonymous, and beautifully simple.
       </motion.p>
 
       <hr />
 
-      {/* Feedback Feature */}
+      {/* Question Feature */}
       <motion.section
-        id="feedback"
+        id="Question"
         initial={{ opacity: 0, x: -100 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -103,7 +110,7 @@ const Home: React.FC = () => {
           )}
           <img
             src={homeImg}
-            alt="Feedback Illustration"
+            alt="Question Illustration"
             onLoad={() => setImageLoaded(true)}
             className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-500 ${
               imageLoaded ? "opacity-100" : "opacity-0"
@@ -115,7 +122,7 @@ const Home: React.FC = () => {
               Create and Share Your
             </p>
             <div className="text-[var(--primary)] font-bold text-8xl sm:text-7xl transform scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700 delay-200">
-              Feedback
+              Question
             </div>
           </div>
         </div>
@@ -123,7 +130,7 @@ const Home: React.FC = () => {
         {/* Text Content */}
         <div className="flex-1 space-y-4">
           <h2 className="text-3xl font-bold text-[var(--primary)]">
-            📝 Anonymous Feedback
+            📝 Anonymous Question
           </h2>
           <p>
             Gather honest responses via shared links — no sign-in required.
@@ -141,19 +148,19 @@ const Home: React.FC = () => {
               to={isLoggedIn ? "feedback/create" : "signin"}
               className="px-6 py-2 rounded bg-[var(--primary)] text-white hover:opacity-90 transition text-center"
             >
-              Create Feedback
+              Create Question
             </Link>
             <input
               type="text"
-              placeholder="Enter Feedback link"
-              onChange={(e) => setFeedback(e.target.value)}
+              placeholder="Enter Question link"
+              onChange={(e) => setQuestion(e.target.value)}
               className="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-transparent text-sm w-full sm:w-60"
             />
             <button
               className="px-6 py-2 rounded border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition"
               onClick={handleAnswer}
             >
-              Join Feedback
+              Give Answer
             </button>
           </div>
         </div>

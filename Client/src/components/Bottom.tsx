@@ -30,7 +30,7 @@ const Bottom: React.FC = () => {
             Contact
           </a>
           <span
-            className="text-gray-500 hover:scale-125 cursor-pointer"
+            className="text-gray-500 hover:scale-125 cursor-pointer w-8 h-8 flex items-center justify-center rounded-full"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
             onMouseMove={handleMouseMove}
