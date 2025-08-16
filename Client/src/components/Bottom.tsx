@@ -19,7 +19,7 @@ const Bottom: React.FC = () => {
         {/* Links */}
         <div className="hidden sm:flex items-center gap-4 relative">
           <a
-            href="https://github.com/DivyanshuVortex"
+            href="https://github.com/DivyanshuVortex/Anon-Board"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-[var(--primary)] transition"

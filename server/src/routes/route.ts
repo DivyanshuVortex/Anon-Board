@@ -22,9 +22,5 @@ router.get("/feedback/:id", showFeedback);
 router.post("/feedback/:id", answerFeedback);
 
 router.delete("/feedback/:feedbackId", authMiddleware, deletefeedback);
-router.delete(
-  "/feedback/:feedbackId/response/:responseId",
-  authMiddleware,
-  deleteresponse
-);
+router.delete("/feedback/:feedbackId/response/:responseId", authMiddleware, deleteresponse);
 export default router;
