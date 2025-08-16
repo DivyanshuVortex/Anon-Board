@@ -30,8 +30,7 @@ const Profile: React.FC = () => {
         const data = await res.json();
         setUser(data.user);
         setIsLoggedIn(true);
-      } catch (err) {
-        console.error("Error fetching user:", err);
+      } catch {
         setUser(null);
         setIsLoggedIn(false);
       } finally {
@@ -55,22 +54,37 @@ const Profile: React.FC = () => {
 
   const FeedbackList = () => (
     <>
-      {user?.feedbacks && user.feedbacks.length > 0 ? (
+      {Array.isArray(user?.feedback) && user.feedback.length > 0 ? (
         <div className="w-full">
-          {/* Desktop/Tablet table */}
           <div className="hidden md:grid grid-cols-4 border rounded-lg overflow-hidden">
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">S.No</div>
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">Title</div>
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">Responses</div>
-            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2">Dashboard</div>
-            {user.feedbacks.map((f: any, i: number) => (
+            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">
+              S.No
+            </div>
+            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">
+              Title
+            </div>
+            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r">
+              Responses
+            </div>
+            <div className="bg-[var(--primary)] text-white font-semibold px-4 py-2">
+              Dashboard
+            </div>
+            {user.feedback.map((f: any, i: number) => (
               <React.Fragment key={f.id || i}>
                 <div className="px-4 py-2 border-t">{i + 1}</div>
-                <div className="px-4 py-2 border-t truncate">{f.title || f.content}</div>
-                <div className="px-4 py-2 border-t text-center">{f._count?.responses ?? 0}</div>
+                <div className="px-4 py-2 border-t truncate">
+                  {f.title || f.content}
+                </div>
+                <div className="px-4 py-2 border-t text-center">
+                  {f._count?.responses ?? 0}
+                </div>
                 <div className="px-4 py-2 border-t text-center">
                   <button
-                    onClick={() => navigate(`/dashboard/${f.id}`, { state: { responseCount: f._count?.responses ?? 0 } })}
+                    onClick={() =>
+                      navigate(`/dashboard/${f.id}`, {
+                        state: { responseCount: f._count?.responses ?? 0 },
+                      })
+                    }
                     className="text-blue-500 hover:underline"
                   >
                     Go to
@@ -80,9 +94,8 @@ const Profile: React.FC = () => {
             ))}
           </div>
 
-          {/* Mobile cards */}
           <div className="block md:hidden space-y-3">
-            {user.feedbacks.map((f: any, i: number) => (
+            {user.feedback.map((f: any, i: number) => (
               <div
                 key={f.id || i}
                 className="p-3 border rounded-lg bg-white dark:bg-gray-800 shadow-sm"
@@ -92,7 +105,11 @@ const Profile: React.FC = () => {
                   Responses: {f._count?.responses ?? 0}
                 </p>
                 <button
-                  onClick={() => navigate(`/dashboard/${f.id}`, { state: { responseCount: f._count?.responses ?? 0 } })}
+                  onClick={() =>
+                    navigate(`/dashboard/${f.id}`, {
+                      state: { responseCount: f._count?.responses ?? 0 },
+                    })
+                  }
                   className="mt-2 text-blue-500 hover:underline"
                 >
                   View Dashboard
@@ -122,7 +139,6 @@ const Profile: React.FC = () => {
       <div className="w-full max-w-4xl bg-white dark:bg-[var(--bg)] rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
         {isLoggedIn && user ? (
           <>
-            {/* Profile header */}
             <div className="flex flex-col items-center text-center mb-6">
               <img
                 src={avatarUrl}
