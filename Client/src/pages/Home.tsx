@@ -17,12 +17,18 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { isLoggedIn } = useContext(UserAuthContext);
+const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+const [showTooltip, setShowTooltip] = useState(false);
 
+ const handleMouseMove = (e: React.MouseEvent<HTMLSpanElement>) => {
+     setTooltipPos({ x: e.clientX + 10, y: e.clientY + 10 });
+   };
   function handleAnswer() {
   if (!Question || Question.trim() === "") {
     toast.error("Please enter a Question URL");
     return;
   }
+ 
 
   try {
     const url = new URL(Question); // parse the string as a URL
@@ -36,7 +42,7 @@ const Home: React.FC = () => {
 
   // Simulate loading delay
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500); // adjust as needed
+    const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -65,10 +71,27 @@ const Home: React.FC = () => {
       >
         <Link
               to={isLoggedIn ? "feedback/create" : "signin"}
-              className="px-6 hover:scale-200 scale-150 py-2 rounded bg-[var(--primary)] text-white hover:opacity-80 transition text-center"
+              className="px-6 hover:scale-150 scale-125 py-2 rounded bg-[var(--primary)] text-white hover:opacity-90 transition text-center"
+              onMouseEnter={()=>{setShowTooltip(true)}}
+              onMouseLeave={()=>{setShowTooltip(false)}}
+              onMouseMove={handleMouseMove}
             >
               Create Question
             </Link>
+            {showTooltip && (
+            <span
+              style={{
+                position: "fixed",
+                top: tooltipPos.y,
+                left: tooltipPos.x,
+                pointerEvents: "none",
+              }}
+              className="bg-black text-white px-2 py-1 text-xs rounded shadow-md cursor-help" 
+            >
+              Make a Question
+            </span>
+          )}
+
         <a
           href="#Question"
           className="hover:underline hover:text-[var(--primary)] transition"

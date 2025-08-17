@@ -38,8 +38,8 @@ Create `.env` files in the client and server folders.
 
 *Backend (`server/.env`)*  
 `PORT=3000`  
-`JWT_SECRET=DivyanshuChandraVortex`  
-`DATABASE_URL="postgresql://neondb_owner:npg_cYjLekg36bHZ@ep-holy-grass-abxb4m6s-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"`  
+`JWT_SECRET=your_jwt_secret`  
+`DATABASE_URL="postgresql://neondb_owner:password@ep-holy-grass-abxb4m6s-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"`  
 
 🚨 **IMPORTANT:** Replace placeholder values with your own unique and secure secrets. Do not use example values in a public repository.  
 

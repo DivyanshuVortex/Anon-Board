@@ -57,7 +57,9 @@ const Bottom: React.FC = () => {
 
       {/* Mobile Single Line */}
       <div className="sm:hidden mt-3 text-center text-[11px] text-gray-500">
-        © 2025 <strong>AnonBoard</strong> — GitHub | Contact
+        © 2025 <strong>AnonBoard</strong> — 
+        <a href="https://github.com/DivyanshuVortex/Anon-Board" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+        <a href="/contact">Contact</a>
       </div>
 
       {/* Bottom line desktop */}
