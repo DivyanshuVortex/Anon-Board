@@ -28,11 +28,20 @@ const Answer = () => {
         if (!resp.ok) throw new Error("Failed to fetch question");
 
         const data = await resp.json();
-        setQuestionData({
-          question: data.content,
-          username: data.user?.username || "Unknown",
-          createdAt: data.createdAt || "",
-        });
+        console.log("Fetched question data:", data);
+        if(!data.visible) {
+          setQuestionData({
+            question: data.content,
+            username: "Anonymous",
+            createdAt: data.createdAt || "",
+          });
+        } else {
+          setQuestionData({
+            question: data.content,
+            username: data.user?.username || "Unknown",
+            createdAt: data.createdAt || "",
+          });
+        }
       } catch (error) {
         console.error("Error fetching question:", error);
       } finally {

@@ -24,10 +24,10 @@ export const createFeedback = async (req: AuthenticatedRequest, res: Response) =
     if (!existingUser) {
       return res.status(400).json({ error: "User not found ------------------" });
     }
-
     const feedback = await prisma.feedback.create({
       data: {
         content: req.body.content,
+        visible: req.body.visible,
         userId: userId, // Directly set foreign key
       },
     });

@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 const Create = () => {
   const [question, setQuestion] = useState("");
   const [feedbackId, setFeedbackId] = useState("");
+  const [showUser, setShowUser] = useState(true);
   const [link, setLink] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
@@ -28,8 +29,7 @@ const Create = () => {
     }
     setError("");
 
-    const data = { content: question, type: "text" };
-
+    const data = { content: question, type: "text", visible : showUser };
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/create`, {
         method: "POST",
@@ -79,6 +79,17 @@ const Create = () => {
                 className="w-full p-3 rounded-lg border border-gray-300 bg-[var(--input-bg)] text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 required
               />
+              <button
+                onClick={() => setShowUser((prev) => !prev)}
+                className=" text-white rounded-lg font-semibold hover:bg-blue-600 active:scale-95 transition mt-5 border border-white p-1 px-2"
+              >
+                {showUser ? "Hide User" : "Show User"}
+              </button>
+              {showUser && (
+                <div className="mt-2 text-sm text-gray-500">
+                  *** If you want to Hide Your Name then just click on the Hide-User
+                </div>
+              )}
             </div>
 
             {error && (
