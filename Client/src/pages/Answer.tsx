@@ -28,7 +28,6 @@ const Answer = () => {
         if (!resp.ok) throw new Error("Failed to fetch question");
 
         const data = await resp.json();
-        console.log("Fetched question data:", data);
         if(!data.visible) {
           setQuestionData({
             question: data.content,
