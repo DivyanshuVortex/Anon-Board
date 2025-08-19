@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import {
@@ -11,19 +11,16 @@ import {
 
 const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
   const [copied, setCopied] = useState(false);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [share, setShare] = useState(false);
   const feedbackUrl = `${window.location.origin}/feedback/${feedbackId}`;
 
-  const sharing = () => {
-    setShare(true);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    timerRef.current = setTimeout(() => {
-      setShare(false);
-    }, 4000);
-  };
+const sharing = () => {
+  setShare(true);
+  setTimeout(() => {
+    setShare(false);
+  }, 4000);
+};
+
 
   const copyLink = () => {
     navigator.clipboard.writeText(feedbackUrl);
