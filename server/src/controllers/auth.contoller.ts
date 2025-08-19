@@ -115,6 +115,7 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
             _count: { 
               select: { responses: true },
             },
+            visible : true
           },
         },
       },

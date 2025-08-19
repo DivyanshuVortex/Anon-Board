@@ -13,10 +13,10 @@ const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
   const [copied, setCopied] = useState(false);
   const [share, setShare] = useState(false);
   const feedbackUrl = `${window.location.origin}/feedback/${feedbackId}`;
+
   const sharing = () => {
     setShare(true);
     setTimeout(() => setShare(false), 10000);
-    return;
   };
 
   const copyLink = () => {
@@ -29,16 +29,24 @@ const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
     let url = "";
     switch (platform) {
       case "facebook":
-        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(feedbackUrl)}`;
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          feedbackUrl
+        )}`;
         break;
       case "twitter":
-        url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(feedbackUrl)}`;
+        url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+          feedbackUrl
+        )}`;
         break;
       case "linkedin":
-        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(feedbackUrl)}`;
+        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          feedbackUrl
+        )}`;
         break;
       case "whatsapp":
-        url = `https://api.whatsapp.com/send?text=${encodeURIComponent(feedbackUrl)}`;
+        url = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+          feedbackUrl
+        )}`;
         break;
     }
     if (url) window.open(url, "_blank");
@@ -47,44 +55,54 @@ const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
   return (
     <div className="text-center">
       {!share && (
-        <button className="text-sm text-gray-400 mb-1.5" onClick={sharing}>
+        <button
+          className="text-sm text-gray-400 mb-1.5 hover:text-[var(--primary)] transition"
+          onClick={sharing}
+        >
           Share
         </button>
       )}
       {share && (
-        <div className="flex justify-center gap-3 text-2xl mb-1.5">
+        <div className="flex justify-center gap-2 text-xl mb-1.5">
           <button
             onClick={() => openShare("facebook")}
-            className="hover:text-blue-500 transition"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-blue-600"
           >
             <FaFacebook />
           </button>
           <button
             onClick={() => openShare("twitter")}
-            className="hover:text-sky-400 transition"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-sky-400"
           >
             <FaTwitter />
           </button>
           <button
             onClick={() => openShare("linkedin")}
-            className="hover:text-blue-700 transition"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-blue-700"
           >
             <FaLinkedin />
           </button>
           <button
             onClick={() => openShare("whatsapp")}
-            className="hover:text-green-500 transition"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-green-500"
           >
             <FaWhatsapp />
           </button>
-          <button onClick={copyLink} className="hover:text-gray-400 transition">
+          <button
+            onClick={copyLink}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600"
+          >
             <FaLink />
           </button>
         </div>
       )}
-      {copied && <p className="text-xs text-green-500 mt-1">Link copied!</p>}
+      {copied && <p className="text-xs text-green-500 mt-1">Copied!</p>}
     </div>
   );
+};
+const truncateText = (text: string, maxLength: number) => {
+  if (!text) return "";
+  return text.length > maxLength ? text.slice(0, maxLength) + "…" : text;
 };
 
 const FeedbackList: React.FC<{ user: any; navigate: any }> = ({
@@ -98,24 +116,39 @@ const FeedbackList: React.FC<{ user: any; navigate: any }> = ({
   return (
     <>
       {/* Desktop Table */}
-      <div className="hidden md:grid grid-cols-5 border rounded-lg overflow-hidden mt-4">
-        {["S.No", "Title", "Responses", "Link", "Dashboard"].map((heading) => (
-          <div
-            key={heading}
-            className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r text-center"
-          >
-            {heading}
-          </div>
-        ))}
+      <div className="hidden md:grid grid-cols-6 border rounded-lg overflow-hidden mt-4 shadow-sm">
+        {["S.No", "Title", "Responses", "Visibility", "Share", "Dashboard"].map(
+          (heading) => (
+            <div
+              key={heading}
+              className="bg-[var(--primary)] text-white font-semibold px-4 py-2 border-r text-center"
+            >
+              {heading}
+            </div>
+          )
+        )}
 
         {user.feedback.map((f: any, i: number) => (
           <React.Fragment key={f.id || i}>
             <div className="px-4 py-2 border-t text-center">{i + 1}</div>
-            <div className="px-4 py-2 border-t truncate text-center">
+            <div
+              className="px-4 py-2 border-t truncate text-center"
+              title={f.title || f.content}
+            >
               {f.title || f.content}
             </div>
             <div className="px-4 py-2 border-t text-center">
               {f._count?.responses ?? 0}
+            </div>
+            <div
+              className="px-4 py-2 border-t text-center text-xl cursor-pointer"
+              title={
+                f.visible
+                  ? "Username is visible to everyone"
+                  : "Username is hidden"
+              }
+            >
+              {f.visible ? "👁️" : "🙈"}
             </div>
             <div className="px-4 py-2 border-t text-center">
               <ShareButtons feedbackId={f.id} />
@@ -129,7 +162,7 @@ const FeedbackList: React.FC<{ user: any; navigate: any }> = ({
                 }
                 className="text-blue-500 hover:underline"
               >
-                Go to
+                Go
               </button>
             </div>
           </React.Fragment>
@@ -137,32 +170,51 @@ const FeedbackList: React.FC<{ user: any; navigate: any }> = ({
       </div>
 
       {/* Mobile Cards */}
-      <div className="block md:hidden space-y-3 mt-4">
-        {user.feedback.map((f: any, i: number) => (
-          <div
-            key={f.id || i}
-            className="p-3 border rounded-lg bg-white dark:bg-gray-800 shadow-sm"
-          >
-            <p className="font-semibold">{f.title || f.content}</p>
-            <p className="text-sm text-gray-500">
-              Responses: {f._count?.responses ?? 0}
-            </p>
-            <div className="flex justify-between mt-2 items-center">
-              <button
-                onClick={() =>
-                  navigate(`/dashboard/${f.id}`, {
-                    state: { responseCount: f._count?.responses ?? 0 },
-                  })
-                }
-                className="text-blue-500 hover:underline"
-              >
-                View Dashboard
-              </button>
-              <ShareButtons feedbackId={f.id} />
-            </div>
-          </div>
-        ))}
+      <div className="block md:hidden space-y-4 mt-4">
+  {user.feedback.map((f: any, i: number) => (
+    <div
+      key={f.id || i}
+      className="p-4 border rounded-xl bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition flex flex-col"
+    >
+      {/* Title Section */}
+      <p className="font-semibold text-[var(--text)] text-lg break-words">
+        {truncateText(f.title || f.content, 30)}
+      </p>
+
+      {/* Visibility */}
+      <div
+        className={`text-sm px-2 py-1 mt-2 w-max rounded-full ${
+          f.visible
+            ? "bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100"
+            : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+        }`}
+      >
+        Username: {f.visible ? "👁️ Visible" : "🙈 Hidden"}
       </div>
+
+      {/* Meta Info */}
+      <p className="text-sm text-gray-500 mt-2">
+        Responses: {f._count?.responses ?? 0}
+      </p>
+
+      {/* Actions */}
+      <div className="flex justify-between items-center mt-3">
+        <button
+          onClick={() =>
+            navigate(`/dashboard/${f.id}`, {
+              state: { responseCount: f._count?.responses ?? 0 },
+            })
+          }
+          className="text-blue-500 hover:underline font-medium"
+        >
+          Dashboard
+        </button>
+        <ShareButtons feedbackId={f.id} />
+      </div>
+    </div>
+  ))}
+</div>
+
     </>
   );
 };
@@ -216,7 +268,9 @@ const Profile: React.FC = () => {
   };
 
   const avatarUrl = user
-    ? `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.username)}`
+    ? `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(
+        user.username
+      )}`
     : "";
 
   if (loading) {
@@ -231,7 +285,7 @@ const Profile: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] p-4 flex justify-center">
-      <div className="w-full max-w-4xl bg-white dark:bg-[var(--bg)] rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+      <div className="w-full max-w-3xl bg-white dark:bg-[var(--bg)] rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
         {isLoggedIn && user ? (
           <>
             <div className="flex flex-col items-center text-center mb-6">

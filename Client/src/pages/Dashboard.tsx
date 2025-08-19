@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import { Trash2 } from "lucide-react";
 import useTop from "../Hooks/useTop";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 interface ResponseItem {
   id: number;
@@ -74,8 +74,8 @@ const Dashboard: React.FC = () => {
     if (!window.confirm("❗ Delete this response?")) return;
     try {
       const resp = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}/response/${responseId}`,
-          {
+        `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}/response/${responseId}`,
+        {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -168,7 +168,7 @@ const Dashboard: React.FC = () => {
             <h2 className="text-2xl font-bold mb-4">
               {data.user.username}'s Feedback
             </h2>
-            <p className="text-lg leading-relaxed p-4 rounded-lg border border-white/10 bg-white/5">
+            <p className="text-lg leading-relaxed p-4 rounded-lg border border-white/10 bg-white/5 break-words whitespace-pre-wrap">
               {data.content}
             </p>
           </div>
