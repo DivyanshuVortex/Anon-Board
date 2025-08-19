@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../contexts/Usercontext";
 import {
@@ -11,12 +11,18 @@ import {
 
 const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
   const [copied, setCopied] = useState(false);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [share, setShare] = useState(false);
   const feedbackUrl = `${window.location.origin}/feedback/${feedbackId}`;
 
   const sharing = () => {
     setShare(true);
-    setTimeout(() => setShare(false), 10000);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      setShare(false);
+    }, 4000);
   };
 
   const copyLink = () => {
@@ -53,7 +59,7 @@ const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center scale-75">
       {!share && (
         <button
           className="text-sm text-gray-400 mb-1.5 hover:text-[var(--primary)] transition"
@@ -63,34 +69,34 @@ const ShareButtons: React.FC<{ feedbackId: string }> = ({ feedbackId }) => {
         </button>
       )}
       {share && (
-        <div className="flex justify-center gap-2 text-xl mb-1.5">
+        <div className="flex justify-center text-2xl mb-1.5 gap-1">
           <button
             onClick={() => openShare("facebook")}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-blue-600"
+            className="p-2 hidden md:block hover:scale-150 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-blue-600"
           >
             <FaFacebook />
           </button>
           <button
             onClick={() => openShare("twitter")}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-sky-400"
+            className="p-2 hidden md:block hover:scale-150 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-sky-400"
           >
             <FaTwitter />
           </button>
           <button
             onClick={() => openShare("linkedin")}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-blue-700"
+            className="p-2 hover:scale-150 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-blue-700"
           >
             <FaLinkedin />
           </button>
           <button
             onClick={() => openShare("whatsapp")}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-green-500"
+            className="p-2 hover:scale-150 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 hover:text-green-500"
           >
             <FaWhatsapp />
           </button>
           <button
             onClick={copyLink}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600"
+            className="p-2 hover:scale-150 rounded-full hover:bg-gray-100 dark:hover:bg-white transition text-gray-600"
           >
             <FaLink />
           </button>
@@ -116,7 +122,7 @@ const FeedbackList: React.FC<{ user: any; navigate: any }> = ({
   return (
     <>
       {/* Desktop Table */}
-      <div className="hidden md:grid grid-cols-6 border rounded-lg overflow-hidden mt-4 shadow-sm">
+      <div className="hidden w-full md:grid grid-cols-6 border rounded-lg overflow-hidden mt-4 shadow-sm">
         {["S.No", "Title", "Responses", "Visibility", "Share", "Dashboard"].map(
           (heading) => (
             <div
