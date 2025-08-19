@@ -1,14 +1,15 @@
 # Anon Board
 
-Anon Board is a simple web application for anonymous feedback. It allows users to securely share and view feedback, promoting open and honest communication without revealing identities.
+Anon Board is a simple web application for anonymous questions. It allows users to securely share and view feedback, promoting open and honest communication without revealing identities.
 
 🚀 **Live Demo**  
-You can try a live version of Anon Board here: [https://anon-board-six.vercel.app](https://anon-board-six.vercel.app)
+You can try a live version of Anon Board here: [[https://anon-board-six.vercel.app](https://anon-board-ebon.vercel.app/)]
 
 🛠️ **Tech Stack**  
 React, React Toast, Node.js, Express, PostgreSQL, Prisma ORM, JWT, bcrypt, Zod
 
 ✨ **Key Features**  
+- Create questions with optional username visibility 
 - Submit feedback anonymously  
 - View all feedback from other users in real-time  
 - Secure authentication and password hashing  
