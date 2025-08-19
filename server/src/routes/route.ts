@@ -7,6 +7,7 @@ import {
   showFeedback,
   deletefeedback,
   deleteresponse,
+  showResponses
 } from "../controllers/feed.control";
 
 const router = express.Router();
@@ -21,6 +22,8 @@ router.post("/create", authMiddleware, createFeedback);
 router.get("/feedback/:id", showFeedback);
 router.post("/feedback/:id", answerFeedback);
 
+//DashBoard
+router.get("/dashboard/:id", authMiddleware, showResponses );
 router.delete("/feedback/:feedbackId", authMiddleware, deletefeedback);
 router.delete("/feedback/:feedbackId/response/:responseId", authMiddleware, deleteresponse);
 export default router;

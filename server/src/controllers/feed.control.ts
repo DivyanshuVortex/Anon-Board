@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import e, { Response, Request } from "express";
 
 const prisma = new PrismaClient();
 
 export interface AuthenticatedRequest extends Request {
   user?: {
-    id: number;
+    id: string; // must match the Prisma cuid type
   };
 }
 
@@ -40,7 +40,7 @@ export const createFeedback = async (req: AuthenticatedRequest, res: Response) =
 };
 export const showFeedback = async (req: Request, res: Response) => {
   try {
-    const feedbackId = parseInt(req.params.id as string);
+    const feedbackId = String(req.params.id);
     const feedback = await prisma.feedback.findUnique({
       where: { id: feedbackId },
       include: { user : true, responses: true },
@@ -60,12 +60,12 @@ export const showFeedback = async (req: Request, res: Response) => {
 export const answerFeedback = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
-    const feedbackId = parseInt(req.params.id as string);
+    const feedbackId = String(req.params.id);
        const existingFeedback = await prisma.feedback.findUnique({
       where: { id: feedbackId },
       include: {
         user: {
-          select: { username: true,createdAt: true }, 
+          select: { username: true, createdAt: true },
         }
       }
     });
@@ -88,6 +88,27 @@ export const answerFeedback = async (req: Request, res: Response) => {
   }
 };
 
+export const showResponses = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const feedbackId = String(req.params.id);
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const feedbacks = await prisma.feedback.findMany({
+      where: { userId: userId, id: feedbackId },
+      include: { user: true, responses: true },
+    });
+
+    return res.status(200).json(feedbacks);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const deletefeedback = async (req: Request, res: Response) => {
   try {
     const { feedbackId } = req.params;
@@ -99,26 +120,21 @@ export const deletefeedback = async (req: Request, res: Response) => {
 
     // Find feedback
     const feedback = await prisma.feedback.findUnique({
-      where: { id: Number(feedbackId) },
+      where: { id: feedbackId },
     });
 
     if (!feedback) {
       return res.status(404).json({ message: "Feedback not found" });
     }
 
-    // Check ownership
-    if (feedback.userId !== userId) {
-      return res.status(403).json({ message: "You are not allowed to delete this feedback" });
-    }
-
        // Delete responses first
     await prisma.response.deleteMany({
-      where: { feedbackId: Number(feedbackId) },
+      where: { feedbackId: String(feedbackId) },
     });
 
     // Now delete the feedback
     await prisma.feedback.delete({
-      where: { id: Number(feedbackId) },
+      where: { id: String(feedbackId) },
     });
 
 
@@ -141,7 +157,7 @@ export const deleteresponse = async (req: Request, res: Response) => {
 
     // Find the response with feedback relation
     const response = await prisma.response.findUnique({
-      where: { id: Number(responseId) },
+      where: { id: String(responseId) },
       include: { feedback: true },
     });
 
@@ -149,14 +165,10 @@ export const deleteresponse = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Response not found" });
     }
 
-    // Ownership check: user must own the feedback this response belongs to
-    if (response.feedback.userId !== userId) {
-      return res.status(403).json({ message: "Not allowed to delete this response" });
-    }
 
     // Delete the response
     await prisma.response.delete({
-      where: { id: Number(responseId) },
+      where: { id: String(responseId) },
     });
 
     return res.status(200).json({ message: "Response deleted successfully" });

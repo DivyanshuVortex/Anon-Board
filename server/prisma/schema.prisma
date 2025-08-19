@@ -9,33 +9,31 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   username  String
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
 
-  feedback  feedback[]
+  feedback  Feedback[]
 
 }
-
-model feedback {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  visible   Boolean  @default(false)
+model Feedback {
+  id        String    @id @default(cuid())
+  userId    String
+  visible   Boolean   @default(false)
   content   String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
-
-  responses  response[]
+  user      User      @relation(fields: [userId], references: [id])
+  responses Response[]
 }
 
-model response {
-  id        Int      @id @default(autoincrement())
-  feedbackId Int
-  content   String
-  createdAt DateTime @default(now())
+model Response {
+  id         String    @id @default(cuid())
+  feedbackId String
+  content    String
+  createdAt  DateTime  @default(now())
 
-  feedback  feedback @relation(fields: [feedbackId], references: [id])
+  feedback   Feedback  @relation(fields: [feedbackId], references: [id])
 }

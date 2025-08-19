@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
     if (showLoader) setLoading(true);
     try {
       const resp = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/feedback/${feedbackId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/dashboard/${feedbackId}`,
         {
           method: "GET",
           headers: {
@@ -50,7 +50,7 @@ const Dashboard: React.FC = () => {
       if (!resp.ok) throw new Error("Failed to fetch feedback");
 
       const result: FeedbackData = await resp.json();
-      setData(result);
+      setData(result[0]);
     } catch (err) {
       console.error("Error fetching feedback:", err);
     } finally {

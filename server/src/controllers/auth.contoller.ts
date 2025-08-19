@@ -91,7 +91,7 @@ export const signin = async( req: Request , res: Response) => {
 };
 
 interface AuthenticatedRequest extends Request {
-  user?: { id: number }; 
+  user?: { id: string }; 
 }
 
 export const profile = async (req: AuthenticatedRequest, res: Response) => {
@@ -101,7 +101,7 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: Number(req.user.id) },
+      where: { id: String(req.user.id) },
       select: {
         id: true,
         username: true,

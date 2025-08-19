@@ -80,6 +80,7 @@ const Create = () => {
                 required
               />
               <button
+                type="button"
                 onClick={() => setShowUser((prev) => !prev)}
                 className=" text-white rounded-lg font-semibold hover:bg-blue-600 active:scale-95 transition mt-5 border border-white p-1 px-2"
               >

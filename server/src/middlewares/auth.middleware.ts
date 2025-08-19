@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 declare global {
   namespace Express {
     interface Request {
-      user?: { id: number };
+      user?: { id: string };
     }
   }
 }
@@ -21,12 +21,12 @@ export const authMiddleware = (
       return res.status(401).json({ message: "Unauthorized middleware" });
     }
 
-    const decoded = jwt.verify(
+    const decoded: JwtPayload = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    if (!decoded || typeof decoded.id !== "number") {
+    if (!decoded || typeof decoded.id !== "string") {
       return res.status(401).json({ message: "Invalid token payload" });
     }
 

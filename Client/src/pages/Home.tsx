@@ -16,13 +16,22 @@ const Home: React.FC = () => {
   const [Question, setQuestion] = useState("");
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const { isLoggedIn } = useContext(UserAuthContext);
+  const { isLoggedIn,setIsLoggedIn } = useContext(UserAuthContext);
 const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 const [showTooltip, setShowTooltip] = useState(false);
 
- const handleMouseMove = (e: React.MouseEvent<HTMLSpanElement>) => {
-     setTooltipPos({ x: e.clientX + 10, y: e.clientY + 10 });
-   };
+ useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (token) {
+      setIsLoggedIn(true);
+      return;
+    }
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLSpanElement>) => {
+    setTooltipPos({ x: e.clientX + 10, y: e.clientY + 10 });
+  };
   function handleAnswer() {
   if (!Question || Question.trim() === "") {
     toast.error("Please enter a Question URL");
