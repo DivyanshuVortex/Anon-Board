@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
 
       if (!resp.ok) throw new Error("Failed to fetch feedback");
 
-      const result: FeedbackData = await resp.json();
+      const result: FeedbackData[] = await resp.json();
       setData(result[0]);
     } catch (err) {
       console.error("Error fetching feedback:", err);

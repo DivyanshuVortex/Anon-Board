@@ -3,7 +3,8 @@ import { lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import Bottom from "./components/Bottom";
 import UsercontentProvider from "./contexts/UsercontentProvider";
- import { ToastContainer} from 'react-toastify';
+ import { ToastContainer} from 'react-toastify'; 
+ 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
