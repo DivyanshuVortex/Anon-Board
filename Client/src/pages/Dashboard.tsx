@@ -174,7 +174,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Responses */}
-          <div className="rounded-2xl p-6 border border-white/10 bg-white/5 shadow-lg">
+          <div className="rounded-2xl p-6 border border-white/10 bg-white/5 shadow-lg break-words overflow-x-hidden">
             <h3 className="text-xl font-semibold mb-4">
               Responses ({answers.length})
             </h3>
@@ -186,7 +186,7 @@ const Dashboard: React.FC = () => {
                     key={ans.id}
                     className="flex justify-between items-center p-4 rounded-lg border border-white/10 bg-white/5 hover:border-red-400/60 transition-colors duration-200"
                   >
-                    <span>{ans.content}</span>
+                    <span className="break-words w-[calc(100%-3rem)]">{ans.content}</span>
                     <button
                       onClick={() => handleDeleteResponse(ans.id)}
                       className="p-2 rounded-lg hover:bg-red-500/20 transition-colors duration-200"
