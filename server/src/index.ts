@@ -11,6 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse JSON
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome to the Anon-Board API");
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 
