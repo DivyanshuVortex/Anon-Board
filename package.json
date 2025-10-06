@@ -1,0 +1,18 @@
+{
+  "name": "anon-board",
+  "version": "1.0.0",
+  "description": "Anon Board is a simple web application for anonymous questions. It allows users to securely share and view feedback, promoting open and honest communication without revealing identities.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run dev:client & npm run dev:server",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
