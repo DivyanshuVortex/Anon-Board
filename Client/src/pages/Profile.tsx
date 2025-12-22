@@ -307,7 +307,7 @@ const Profile: React.FC = () => {
 
             <button
               onClick={handleLogout}
-              className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--primary)] text-white hover:bg-[var(--special)] hover:text-black transition"
+              className="mt-6 w-full px-6 py-2 rounded-lg font-semibold border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--special)] transition"
             >
               Logout
             </button>
@@ -320,13 +320,13 @@ const Profile: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate("/signin")}
-                className="px-6 py-2 rounded-lg font-semibold bg-[var(--primary)] text-white hover:bg-[var(--special)] hover:text-black transition"
+                className="px-6 py-2 rounded-lg font-semibold border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--special)] transition"
               >
                 Sign In
               </button>
               <button
                 onClick={() => navigate("/signup")}
-                className="px-6 py-2 rounded-lg font-semibold border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--special)] hover:text-black transition"
+                className="px-6 py-2 rounded-lg font-semibold border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--special)] transition"
               >
                 Sign Up
               </button>
