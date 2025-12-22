@@ -1,6 +1,6 @@
 {
   "name": "anon-board",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Anon Board is a simple web application for anonymous questions. It allows users to securely share and view feedback, promoting open and honest communication without revealing identities.",
   "main": "index.js",
   "scripts": {
