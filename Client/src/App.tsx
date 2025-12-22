@@ -16,10 +16,14 @@ const Create = lazy(() => import("./pages/Create"));
 const Answer = lazy(() => import("./pages/Answer"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
+import CustomCursor from "./components/CustomCursor";
+import SoundModal from "./components/SoundModal";
+
 function App() {
   return (
     <UsercontentProvider>
       <BrowserRouter>
+        <CustomCursor />
         <Navbar />
         <Suspense
           fallback={
@@ -41,6 +45,7 @@ function App() {
           </Routes>
         </Suspense>
         <Bottom />
+        <SoundModal />
       </BrowserRouter>
       <ToastContainer />
     </UsercontentProvider>

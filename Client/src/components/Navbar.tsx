@@ -1,101 +1,110 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSound } from "../Hooks/useSound";
 
 const Navbar: React.FC = () => {
+  const playSound = useSound();
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Toggle handler
   const toggleDarkMode = () => {
+    playSound();
     const newMode = !darkMode;
     setDarkMode(newMode);
     localStorage.setItem("theme", newMode ? "dark" : "light");
     document.documentElement.classList.toggle("dark", newMode);
   };
 
-  // On mount, apply saved theme
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Profile", path: "/profile" },
+  ];
+
   return (
-    <nav className="w-full h-16 text-[var(--text)] flex items-center justify-between px-6 shadow-lg bg-[var(--bg)] relative">
-      {/* Logo */}
-      <Link to="/" className="text-xl font-extrabold text-[var(--text)] z-50">
+    <nav className="w-full h-20 flex items-center justify-between px-3 md:px-8 bg-[var(--bg)] border-b border-[var(--border)] relative z-50">
+      <Link 
+        to="/" 
+        className="text-2xl xs:text-3xl md:text-4xl tracking-widest text-[var(--text)] uppercase hover:scale-105 transition-transform"
+        style={{ fontFamily: 'var(--font-heading)' }}
+        onMouseEnter={() => playSound()}
+      >
         AnonBoard
       </Link>
 
-      {/* Desktop Links */}
-      <div className="hidden md:flex items-center gap-4 text-sm">
-        <Link to="/" className="hover:text-gray-400">
-          Home
-        </Link>
-        <Link to="/about" className="hover:text-gray-400">
-          About
-        </Link>
-        <Link to="/contact" className="hover:text-gray-400">
-          Contact
-        </Link>
-        <Link to="/profile" className="hover:text-gray-400">
-          Profile
-        </Link>
-        <button
+      <div className="hidden md:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <Link
+            key={link.name}
+            to={link.path}
+            className="text-lg uppercase hover:underline decoration-2 underline-offset-4"
+            style={{ fontFamily: 'var(--font-ui)' }}
+          >
+            {link.name}
+          </Link>
+        ))}
+        
+        <motion.button
           onClick={toggleDarkMode}
-          className="text-xl hover:opacity-70 scale-105 hover:scale-115 transition"
-          title="Toggle dark mode"
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ rotate: 15 }}
+          className="p-2 rounded-full border border-[var(--text)] hover:bg-[var(--text)] hover:text-[var(--bg)] transition-colors"
         >
-          {darkMode ? "🌞" : "🌙"}
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </motion.button>
+      </div>
+
+      <div className="flex items-center gap-2 md:hidden relative z-50">
+        <motion.button
+          onClick={toggleDarkMode}
+          whileTap={{ scale: 0.9 }}
+          className="p-2"
+        >
+          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </motion.button>
+        
+        <button
+          className="text-black dark:text-white p-1"
+          onClick={() => {
+            setMenuOpen(!menuOpen);
+            playSound();
+          }}
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Hamburger */}
-      <div className="flex items-center gap-2 md:hidden z-50">
-        <button
-          onClick={toggleDarkMode}
-          className="text-xl hover:opacity-70 scale-105 hover:scale-115 transition"
-          title="Toggle dark mode"
-        >
-          {darkMode ? "🌞" : "🌙"}
-        </button>
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="text-xl hover:opacity-70 transition"
-          title="Menu"
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* Mobile Dropdown */}
-     {menuOpen && (
-  <>
-    {/* Overlay (clickable background) */}
-    <div
-      className="fixed inset-0 bg-black opacity-50 blur-sm"
-      onClick={() => setMenuOpen(false)}
-    />
-
-    {/* Menu */}
-    <div className="absolute top-15 left-0 w-full bg-[var(--bg)] border-t shadow-md md:hidden flex flex-col items-center gap-7 py-4 text-lg z-50">
-      <Link to="/" className="hover:text-gray-400" onClick={() => setMenuOpen(false)}>
-        Home
-      </Link>
-      <Link to="/about" className="hover:text-gray-400" onClick={() => setMenuOpen(false)}>
-        About
-      </Link>
-      <Link to="/contact" className="hover:text-gray-400" onClick={() => setMenuOpen(false)}>
-        Contact
-      </Link>
-      <Link to="/profile" className="hover:text-gray-400" onClick={() => setMenuOpen(false)}>
-        Profile
-      </Link>
-    </div>
-  </>
-)}
-
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="fixed top-20 left-0 bottom-0 w-full bg-[var(--bg)] border-t border-[var(--border)] md:hidden flex flex-col items-center py-10 gap-8 shadow-2xl z-40 overflow-y-auto"
+          >
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={() => setMenuOpen(false)}
+                className="text-2xl uppercase tracking-widest"
+                style={{ fontFamily: 'var(--font-ui)' }}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
