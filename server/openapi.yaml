@@ -1,0 +1,208 @@
+openapi: 3.0.0
+info:
+  title: Anon-Board API
+  description: API for anonymous feedback and questions
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+paths:
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, password]
+              properties:
+                username: {type: string}
+                email: {type: string}
+                password: {type: string}
+            examples:
+              standard_signup:
+                value:
+                  username: "testuser"
+                  email: "test@example.com"
+                  password: "password123"
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg: {type: string}
+                  token: {type: string}
+                  user:
+                    type: object
+                    properties:
+                      id: {type: string}
+                      username: {type: string}
+                      email: {type: string}
+              examples:
+                standard_signup:
+                  value:
+                    msg: "Signup successful!"
+                    token: "eyJhbGci..."
+                    user:
+                      id: "clx..."
+                      username: "testuser"
+                      email: "test@example.com"
+  /api/auth/signin:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: {type: string}
+                password: {type: string}
+            examples:
+              standard_signin:
+                value:
+                  email: "test@example.com"
+                  password: "password123"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: {type: string}
+                  token: {type: string}
+                  user:
+                    type: object
+                    properties:
+                      id: {type: string}
+                      username: {type: string}
+                      email: {type: string}
+              examples:
+                standard_signin:
+                  value:
+                    message: "Login successful"
+                    token: "eyJhbGci..."
+                    user:
+                      id: "clx..."
+                      username: "testuser"
+                      email: "test@example.com"
+  /api/auth/profile:
+    get:
+      summary: Get user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile details
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                standard_profile:
+                  value:
+                    message: "User profile fetched"
+                    user:
+                      id: "clx..."
+                      username: "testuser"
+  /api/auth/create:
+    post:
+      summary: Create new feedback request
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content: {type: string}
+                visible: {type: boolean}
+            examples:
+              standard_create:
+                value:
+                  content: "How is the weather?"
+                  visible: true
+      responses:
+        '201':
+          description: Feedback created
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                standard_create:
+                  value:
+                    id: "fb123"
+                    content: "How is the weather?"
+                    visible: true
+  /api/auth/feedback/{id}:
+    get:
+      summary: Show feedback details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: Feedback details
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                standard_view:
+                  value:
+                    id: "fb123"
+                    content: "Great project!"
+                    user: { username: "anon" }
+    post:
+      summary: Answer a feedback
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [answer]
+              properties:
+                answer: {type: string}
+            examples:
+              standard_answer:
+                value:
+                  answer: "Thank you for the feedback!"
+      responses:
+        '201':
+          description: Answer submitted
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                standard_answer:
+                  value:
+                    id: "resp123"
+                    content: "Thank you for the feedback!"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

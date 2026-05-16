@@ -43,3 +43,72 @@ jobs:
         run: |
           cd server
           npm run build
+
+  microcks-test:
+    runs-on: ubuntu-latest
+    services:
+      microcks:
+        image: microcks/microcks-uber:latest
+        ports:
+          - 8080:8080
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: neondb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm install
+
+      - name: Wait for Microcks to be ready
+        run: |
+          until curl -s http://localhost:8080/api/health; do
+            echo "Waiting for Microcks..."
+            sleep 5
+          done
+
+      - name: Import OpenAPI Spec to Microcks
+        uses: microcks/import-github-action@v1
+        with:
+          specificationFiles: 'server/openapi.yaml:true'
+          microcksURL: 'http://localhost:8080/api/'
+
+      - name: Start Server in background
+        env:
+          DATABASE_URL: "postgresql://user:password@localhost:5432/neondb?sslmode=disable"
+          JWT_SECRET: "test_secret"
+          PORT: 3000
+        run: |
+          cd server
+          npx prisma migrate deploy
+          npm run dev &
+          sleep 10
+
+      - name: Run Microcks Test
+        uses: microcks/test-github-action@v1
+        with:
+          apiNameAndVersion: 'Anon-Board API:1.0.0'
+          testEndpoint: 'http://localhost:3000'
+          runner: 'OPEN_API_SCHEMA'
+          microcksURL: 'http://localhost:8080/api/'
+          waitFor: '10sec'
