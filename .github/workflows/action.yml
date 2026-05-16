@@ -88,10 +88,11 @@ jobs:
           done
 
       - name: Import OpenAPI Spec to Microcks
-        uses: microcks/import-github-action@v1
-        with:
-          specificationFiles: 'server/openapi.yaml:true'
-          microcksURL: 'http://localhost:8080/api/'
+        run: |
+          docker run -v ${{ github.workspace }}:/workspace microcks/microcks-cli:latest \
+            microcks-cli import /workspace/server/openapi.yaml \
+            --microcksURL=http://host.docker.internal:8080/api \
+            --waitForReady
 
       - name: Start Server in background
         env:
@@ -105,10 +106,8 @@ jobs:
           sleep 10
 
       - name: Run Microcks Test
-        uses: microcks/test-github-action@v1
-        with:
-          apiNameAndVersion: 'Anon-Board API:1.0.0'
-          testEndpoint: 'http://localhost:3000'
-          runner: 'OPEN_API_SCHEMA'
-          microcksURL: 'http://localhost:8080/api/'
-          waitFor: '10sec'
+        run: |
+          docker run --network="host" -v ${{ github.workspace }}:/workspace microcks/microcks-cli:latest \
+            microcks-cli test 'Anon-Board API:1.0.0' http://localhost:3000 OPEN_API_SCHEMA \
+            --microcksURL=http://localhost:8080/api \
+            --waitFor=10sec
